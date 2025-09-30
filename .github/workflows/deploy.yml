@@ -1,27 +1,23 @@
 name: AKS-and-deploy
 
-on: 
-push:
-branches:
-      - main  # Trigger on pushes to the main branch
-permissions:
-  id-token: write
-  contents: read
-  pages: write
+# on: 
+# push:
+# branches:
+#       - main  # Trigger on pushes to the main branch
 jobs:
    terraform:
    name: Terraform AKS Deployment
    runs-on: ubuntu-latest
    steps:
-      # - name: Checkout Repository
-      #   uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      # - name: Setup Terraform
-      #   uses: hashicorp/setup-terraform@v2
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
 
-      # - name: Terraform init
-      #   run: terraform init
-      # - name: Terraform apply
+      - name: Terraform init
+        run: terraform init
+      - name: Terraform apply
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
