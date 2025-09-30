@@ -13,31 +13,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          auth-type: service_principal
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.9.0
 
-      - name: Terraform init
+      - name: Terraform Init
         run: terraform init
 
-      - name: Terraform plan
+      - name: Terraform Plan
         run: terraform plan -out=tfplan
 
-      - name: Terraform apply
-
-      - name: Login to Azure
-      
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          # client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          # client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-          # subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          # tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          # auth-type: service_principal
-        run: terraform apply -auto-approve tfplan || terraform apply -auto-approve
-        # (First tries applying saved plan; falls back to direct apply if plan not used/saved)
+      - name: Terraform Apply
+        run: terraform apply -auto-approve tfplan
 
   deploy:
     name: Deploy to AKS
@@ -51,7 +48,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Login to Azure
+      - name: Azure Login
         uses: azure/login@v1
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
