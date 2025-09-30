@@ -1,4 +1,5 @@
-name: infra-and-deploy
+name: AKS-and-deploy
+
 on: 
 # push:
 # branches:
