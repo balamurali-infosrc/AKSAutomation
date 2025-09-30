@@ -1,0 +1,54 @@
+name: infra-and-deploy
+on: 
+push:
+branches:
+      - main  # Trigger on pushes to the main branch
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+      - name: Terraform init
+        run: terraform init
+      - name: Terraform apply
+        env:
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          # ARM_CLIENT_ID: f0a25b2f-26b0-4f23-91c0-f13c49caea37
+          # ARM_CLIENT_SECRET: sAm8Q~yaNbKqtPb9gWFVtH_VLwPWPQo4Q~2RYbg~
+          # ARM_SUBSCRIPTION_ID: 02a44fee-b200-4cf9-b042-9bd4aa3bebe6
+          # ARM_TENANT_ID: 63b9a1c1-375c-42cf-9c63-dc3798c7ae5e
+
+        run: terraform apply -auto-approve
+
+  deploy:
+    needs: terraform
+    runs-on: ubuntu-latest
+    permissions:
+    id-token: write
+    contents: read
+    pages: write
+    steps:
+      # - uses: azure/login@v1
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
+         uses: azure/login@v1
+         with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          # az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
+          # az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          auth-type: SERVICE_PRINCIPAL
+       - name: Get AKS creds
+         run: az aks get-credentials -g demo-aks-rg -n demo-aks --overwrite-existing
+       - name: kubectl apply
+         run: kubectl apply -f deployment/
+       
+
+         
