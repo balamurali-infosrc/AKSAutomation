@@ -4,7 +4,10 @@ on:
   push:
     branches:
       - main
-
+permissions:
+      id-token: write
+      contents: read
+      pages: write
 jobs:
   terraform:
     name: Terraform AKS Deployment
