@@ -23,8 +23,8 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Terraform apply
-
-      - name: Login to Azure
+        env:
+        - name: Login to Azure
         uses: azure/login@v1
         with:
           # ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
