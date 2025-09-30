@@ -66,7 +66,7 @@ jobs:
           version: 'latest'
 
       - name: Get AKS credentials
-        run: az aks get-credentials -g demo-aks-rg -n demo-aks --overwrite-existing
+        run: az aks get-credentials -g demo-aks-rg -n demo-aks --overwrite-existing --file $HOME/.kube/config
 
       - name: Apply Kubernetes manifests
         run: kubectl apply -f deployment/
