@@ -42,8 +42,19 @@ resource "azurerm_kubernetes_cluster" "aks" {
   network_profile {
     network_plugin = "azure"
   }
+  
+#   azure_role_based_access_control {
+#   enabled = true
 
-   # RBAC is now an attribute, not a block
+#   admin_group_object_ids = [
+#     "83e0a29a-8c07-44b6-948a-83ede54121e6"
+#   ]
+# }
+
+# azure_role_based_access_control {
+#     enabled = true
+# }
+# #    RBAC is now an attribute, not a block
 #   enable_rbac = true
 
 #   role_based_access_control {
