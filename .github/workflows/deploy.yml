@@ -23,13 +23,10 @@ jobs:
         run: terraform plan -out=tfplan
 
       - name: Terraform apply
-        run: |
-          terraform init
-          terraform plan -out=tfplan
-          terraform apply -auto-approve tfplan
+
       - name: Azure Login
         uses: azure/login@v1
-        with:
+        env:
           # ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           # ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           # ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
@@ -39,7 +36,7 @@ jobs:
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           # auth-type: service_principal
-        # run: terraform apply -auto-approve tfplan || terraform apply -auto-approve
+        run: terraform apply -auto-approve tfplan || terraform apply -auto-approve
         # (First tries applying saved plan; falls back to direct apply if plan not used/saved)
 
   deploy:
