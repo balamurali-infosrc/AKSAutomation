@@ -4,9 +4,10 @@ push:
 branches:
       - main  # Trigger on pushes to the main branch
 jobs:
-#   # terraform:
-#     runs-on: ubuntu-latest
-    steps:
+  terraform:
+   name: Terraform AKS Deployment
+  runs-on: ubuntu-latest
+  steps:
       - uses: actions/checkout@v4
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
@@ -26,13 +27,13 @@ jobs:
         run: terraform apply -auto-approve
 
   # deploy:
-    needs: terraform
-    runs-on: ubuntu-latest
-    permissions:
-    id-token: write
-    contents: read
-    pages: write
-    steps:
+        needs: terraform
+        runs-on: ubuntu-latest
+        permissions:
+        id-token: write
+        contents: read
+        pages: write
+        steps:
       # - uses: azure/login@v1
       #   with:
       #     creds: ${{ secrets.AZURE_CREDENTIALS }}
@@ -45,10 +46,10 @@ jobs:
           # az login --service-principal -u ${{ secrets.AZURE_CLIENT_ID }} -p ${{ secrets.AZURE_CLIENT_SECRET }} --tenant ${{ secrets.AZURE_TENANT_ID }}
           # az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           auth-type: SERVICE_PRINCIPAL
-       - name: Get AKS creds
-         run: az aks get-credentials -g demo-aks-rg -n demo-aks --overwrite-existing
-       - name: kubectl apply
-         run: kubectl apply -f deployment/
+      - name: Get AKS creds
+        run: az aks get-credentials -g demo-aks-rg -n demo-aks --overwrite-existing
+      - name: kubectl apply
+        run: kubectl apply -f deployment/
        
 
          
