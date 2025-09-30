@@ -4,7 +4,7 @@ push:
 branches:
       - main  # Trigger on pushes to the main branch
 jobs:
-  terraform:
+  # terraform:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
