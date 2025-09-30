@@ -6,7 +6,7 @@ name: AKS-and-deploy
 #       - main  # Trigger on pushes to the main branch
 jobs:
   # terraform:
-  #  name: Terraform AKS Deployment
+   name: Terraform AKS Deployment
    runs-on: ubuntu-latest
    steps:
       # - name: Checkout Repository
